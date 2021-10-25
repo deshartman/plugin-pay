@@ -1,17 +1,19 @@
 {
   "name": "plugin-pay",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "postinstall": "flex-plugin pre-script-check"
   },
   "dependencies": {
-    "@deshartman/payclient": "^1.0.8",
+    "axios": "^0.23.0",
+    "dotenv-webpack": "^7.0.3",
     "flex-plugin-scripts": "4.2.0",
     "react": "16.13.1",
     "react-checkmark": "^1.4.0",
     "react-credit-cards": "^0.8.3",
-    "react-dom": "16.13.1"
+    "react-dom": "16.13.1",
+    "twilio-sync": "^3.0.5"
   },
   "devDependencies": {
     "@twilio/flex-ui": "^1",

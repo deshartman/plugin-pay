@@ -10,12 +10,10 @@
  * only!
  * 
  */
-//import twilio from "twilio";
-import SyncClient from "twilio-sync";
 import React from 'react';
 import { withTaskContext, } from '@twilio/flex-ui';
-import CreditCard from "./CreditCard";
-import PayClient from '@deshartman/payclient'
+import CardView from './CardView';
+import PayClient from './AgentAssistPayClient';
 
 
 class PayComponent extends React.Component {
@@ -44,11 +42,13 @@ class PayComponent extends React.Component {
 
   async componentDidMount() {
     // Set the Internal Merchant Server URL for config and Access Tokens
-    let merchantServerUrl = "https://payments-6811.twil.io";
-    console.log("Eli note:", this.props.task)
+    let merchantServerUrl = "https://default-8440-dev.twil.io";   // TODO: Change this URL after deploying Functions.
     var callSid = this.props.task.attributes.call_sid
     try {
-      this.payClient = new PayClient(merchantServerUrl, "Alice");
+      this.payClient = new PayClient("Alice");
+
+      await this.payClient.attachPay(merchantServerUrl, callSid);
+      await this.payClient.startCapture();
 
       //Establish the listeners
       this.payClient.on("callConnected", () => {
@@ -56,8 +56,6 @@ class PayComponent extends React.Component {
           ...this.state,
           callConnected: true,
         });
-
-        console.log(`callConnected: this.state.callConnected ${this.state.callConnected}`);
       });
 
       this.payClient.on("capturing", () => {
@@ -65,8 +63,6 @@ class PayComponent extends React.Component {
           ...this.state,
           capturing: true,
         });
-
-        console.log(`capturing: this.state.capturing ${this.state.capturing}`);
       });
 
       this.payClient.on("capturingCard", () => {
@@ -76,23 +72,16 @@ class PayComponent extends React.Component {
           capturingSecurityCode: false,
           capturingDate: false,
         });
-
-        console.log(
-          `capturingCard: this.state.capturingCard ${this.state.capturingCard} this.state.capturingSecurityCode ${this.state.capturingSecurityCode} this.state.capturingDate ${this.state.capturingDate}`
-        );
       });
 
       this.payClient.on("capturingSecurityCode", () => {
         this.setState({
           ...this.state,
+          focused: "cvc",
           capturingSecurityCode: true,
           capturingCard: false,
           capturingDate: false,
         });
-
-        console.log(
-          `capturingSecurityCode: this.state.capturingSecurityCode ${this.state.capturingSecurityCode} this.state.capturingCard ${this.state.capturingCard} this.state.capturingDate ${this.state.capturingDate}`
-        );
       });
 
       this.payClient.on("capturingDate", () => {
@@ -102,10 +91,6 @@ class PayComponent extends React.Component {
           capturingCard: false,
           capturingSecurityCode: false,
         });
-
-        console.log(
-          `capturingDate: this.state.capturingDate ${this.state.capturingDate} this.state.capturingCard ${this.state.capturingCard} this.state.capturingSecurityCode ${this.state.capturingSecurityCode} `
-        );
       });
 
       this.payClient.on("cardReset", () => {
@@ -113,8 +98,6 @@ class PayComponent extends React.Component {
           ...this.state,
           capturingCard: true,
         });
-
-        console.log(`cardReset: this.state.capturingCard ${this.state.capturingCard}`);
       });
 
       this.payClient.on("securityCodeReset", () => {
@@ -122,10 +105,6 @@ class PayComponent extends React.Component {
           ...this.state,
           capturingSecurityCode: true,
         });
-
-        console.log(
-          `securityCodeReset: this.state.capturingSecurityCode ${this.state.capturingSecurityCode}`
-        );
       });
 
       this.payClient.on("dateReset", () => {
@@ -133,8 +112,6 @@ class PayComponent extends React.Component {
           ...this.state,
           capturingDate: true,
         });
-
-        console.log(`dateReset: this.state.capturingDate ${this.state.capturingDate}`);
       });
 
       this.payClient.on("captureComplete", () => {
@@ -142,10 +119,7 @@ class PayComponent extends React.Component {
           ...this.state,
           captureComplete: true,
         });
-
-        console.log(
-          `captureComplete: this.state.captureComplete ${this.state.captureComplete}`
-        );
+        this.payClient.submitCapture();
       });
 
       this.payClient.on("cancelledCapture", () => {
@@ -157,9 +131,6 @@ class PayComponent extends React.Component {
           capturingDate: false,
           captureComplete: false,
         });
-        console.log(
-          `cancelledCapture: this.state.capturing ${this.state.capturing} this.state.capturingCard ${this.state.capturingCard} this.state.capturingSecurityCode ${this.state.capturingSecurityCode} this.state.capturingDate ${this.state.capturingDate} this.state.captureComplete ${this.state.captureComplete}`
-        );
       });
 
       this.payClient.on("submitComplete", () => {
@@ -171,46 +142,45 @@ class PayComponent extends React.Component {
           capturingDate: false,
         });
 
-        console.log(
-          `submitComplete: this.state.capturing ${this.state.capturing} this.state.capturingCard ${this.state.capturingCard} this.state.capturingSecurityCode ${this.state.capturingSecurityCode} this.state.capturingDate ${this.state.capturingDate}`
-        );
       });
 
       this.payClient.on("cardUpdate", (data) => {
         if (this.state.captureComplete) {
           console.log(`cardUpdate: this.state.captureComplete ${this.state.captureComplete}`);
+          console.log(data)
           this.setState({
             ...this.state,
-            paymentToken: data.paymentToken,
+            cardData: { ...this.state.cardData, paymentToken: data.paymentToken },
             captureComplete: false
           });
         } else {
+          console.log(data)
+          var search = 'x';
+          var replaceWith = '*';
+          var modifiedCardNumber = data.paymentCardNumber.split(search).join(replaceWith);
           this.setState({
-            ...this.state,
-            paymentCardNumber: data.paymentCardNumber,
-            securityCode: data.securityCode,
-            expirationDate: data.expirationDate,
-            paymentCardType: data.paymentCardType
+            ...this.state, cardData: {
+              paymentCardNumber: modifiedCardNumber,
+              securityCode: data.securityCode,
+              expirationDate: data.expirationDate,
+              paymentCardType: data.paymentCardType
+            }
           });
         }
-        // console.log(`cardUpdate: this.state.captureComplete ${this.state.captureComplete}`);
       });
 
-      await this.payClient.attachPay(callSid);
-      await this.payClient.startCapture();
 
     } catch (error) {
-      console.error(`'Mounted Error: ${error})`);
+      console.error(`PayClient Mounted Error: ${error}`);
     }
   }
 
   render() {
 
     return (
-      <CreditCard data={this.state} />
+      <CardView data={this.state} />
     )
   }
-
 }
 
 export default withTaskContext(PayComponent);
