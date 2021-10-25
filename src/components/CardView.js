@@ -27,29 +27,26 @@ const overlayStyle = {
     }
 }
 
-export default class CreditView extends React.Component {
-
-
+export default class CardView extends React.Component {
 
     handleChange(event) {
-        console.log(`Output ====> ${this.props.data}, ${[event.target.id]}, ${event.target.value}`)
+        console.log(`#### handleChange ====> ${this.props.data}, ${[event.target.id]}, ${event.target.value}`)
         this.setState({ ...this.props.data, [event.target.id]: event.target.value })
     }
 
     render() {
-
         return (
             <div style={overlayStyle.container}>
                 <TextField
                     variant="outlined"
-                    id="paymentCardNumber"
-                    label="Card Number"
                     style={{ margin: 8 }}
                     placeholder="4444 3333 2222 1111"
                     margin="normal"
                     InputLabelProps={{
                         shrink: true,
                     }}
+                    id="paymentCardNumber"
+                    label="Card Number"
                     value={this.props.data.cardData.paymentCardNumber}
                     onChange={this.handleChange}
                 />

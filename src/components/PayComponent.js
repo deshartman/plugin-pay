@@ -1,15 +1,3 @@
-/**
- * This will eventually be converted into an SDK similar to all the other SDKs and we will need to use
- * access tokens as with other SDKs
- */
-
-/**
- * This is a direct client implementation. It is also possible to use a Node server to initiate the 
- * Twilio API calls and this file only to handle the browser logic to call the node server. This means 
- * that the browser client needs to know the Twilio creds, which is not ideal. This is for prototyping
- * only!
- * 
- */
 import React from 'react';
 import { withTaskContext, } from '@twilio/flex-ui';
 import CardView from './CardView';
@@ -22,6 +10,7 @@ class PayComponent extends React.Component {
     this.payClient = null;
 
     this.state = {
+      // Visual flags to control GUI
       callConnected: false,
       capturing: false,
       capturingCard: false,
@@ -29,7 +18,7 @@ class PayComponent extends React.Component {
       capturingDate: false,
       captureComplete: false,
       focused: 'name',
-
+      // Card object updated by Twilio Sync
       cardData: {
         paymentCardNumber: "",
         securityCode: "",
@@ -168,8 +157,6 @@ class PayComponent extends React.Component {
           });
         }
       });
-
-
     } catch (error) {
       console.error(`PayClient Mounted Error: ${error}`);
     }
