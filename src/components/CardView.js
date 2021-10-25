@@ -1,5 +1,6 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField'
+import Typography from '@material-ui/core/Typography'
 import 'react-credit-cards/es/styles-compiled.css'
 
 const overlayStyle = {
@@ -29,69 +30,29 @@ const overlayStyle = {
 
 export default class CardView extends React.Component {
 
-    handleChange(event) {
-        console.log(`#### handleChange ====> ${this.props.data}, ${[event.target.id]}, ${event.target.value}`)
-        this.setState({ ...this.props.data, [event.target.id]: event.target.value })
-    }
-
     render() {
         return (
             <div style={overlayStyle.container}>
-                <TextField
-                    variant="outlined"
-                    style={{ margin: 8 }}
-                    placeholder="4444 3333 2222 1111"
-                    margin="normal"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    id="paymentCardNumber"
-                    label="Card Number"
-                    value={this.props.data.cardData.paymentCardNumber}
-                    onChange={this.handleChange}
-                />
+                <Typography variant="h5" gutterBottom component="div" >
+                    Card Number:  {this.props.data.cardData.paymentCardNumber}
+                </Typography>
+
                 <br />
-                <TextField
-                    id="securityCode"
-                    variant="outlined"
-                    label="CVC"
-                    style={{ margin: 8 }}
-                    placeholder="cvc"
-                    margin="normal"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    value={this.props.data.cardData.securityCode}
-                    onChange={this.handleChange}
-                />
+                <Typography variant="h5" gutterBottom component="div" >
+                    Card CVC:  {this.props.data.cardData.securityCode}
+                </Typography>
+
+
                 <br />
-                <TextField
-                    id="expirationDate"
-                    variant="outlined"
-                    label="Expiry Date"
-                    style={{ margin: 8 }}
-                    placeholder="MM/YY"
-                    margin="normal"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    value={this.props.data.cardData.expirationDate}
-                    onChange={this.handleChange}
-                />
-                <TextField
-                    id="paymentToken"
-                    variant="filled"
-                    label="Token"
-                    style={{ margin: 8 }}
-                    placeholder="awaiting token from server..."
-                    fullWidth
-                    margin="normal"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    value={this.props.data.cardData.paymentToken}
-                    onChange={this.handleChange}
-                />
+                <Typography variant="h5" gutterBottom component="div" >
+                    Exp. Date:  {this.props.data.cardData.expirationDate}
+                </Typography>
+
+                <br />
+                <Typography variant="h5" gutterBottom component="div" >
+                    Token:  {this.props.data.cardData.paymentToken}
+                </Typography>
+
             </div>
         )
     }
