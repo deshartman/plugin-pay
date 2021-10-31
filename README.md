@@ -17,12 +17,9 @@ The below template code is used in the config file. The values can be changed.
 
 ```
     const config = {
-        twilioAccountSid: context.ACCOUNT_SID,
-        twilioApiKey: context.API_KEY,
-        twilioApiSecret: context.API_SECRET,
         functionsURL: 'https://' + context.DOMAIN_NAME,     // The Twilio Functions URL. Server where "paySyncUpdate" is deployed (See server below)
         payConnector: context.PAY_CONNECTOR,                // The name of the Twilio Pay connector configured
-        paySyncServiceSid: context.PAY_SYNC_SERVICE_SID,    // Sync ServiceSid. All maps will be created
+        paySyncToken: String,                               // Sync Service Token. All maps will be created
         captureOrder: [                                     // example order of keywords.
             "payment-card-number",
             "security-code",
