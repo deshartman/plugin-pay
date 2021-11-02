@@ -26,11 +26,11 @@ export default class PayPlugin extends FlexPlugin {
 
     );
 
-    const options = { sortOrder: -1 };
-    flex.AgentDesktopView
-      .Panel2
-      .Content
-      .replace(<DummyCRM key="dummy-crm" />, options);
+    // const options = { sortOrder: -1 };
+    // flex.AgentDesktopView
+    //   .Panel2
+    //   .Content
+    //   .replace(<DummyCRM key="dummy-crm" />, options);
 
 
     flex.RootContainer.Content.remove("project-switcher")

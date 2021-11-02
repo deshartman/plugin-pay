@@ -42,10 +42,10 @@ This can be done with any server, or for convenience, deploy the server using tw
 
 4. Deploy the Server side with "twilio serverless:deploy". Use the Functions URL for the Merchant Server URL in PayClient.
 
-Once deployed, update src/PayComponent.js
+NOTE: Once the server side is deployed, you MUST update the client src/PayComponent.js
 
 ```
-let merchantServerUrl = "https://default-XXXXX.twil.io";
+let merchantServerUrl = "https://default-XXXXX.twil.io/getConfig";
 ```
 
 Start the frontend plugin with

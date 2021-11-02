@@ -1,11 +1,12 @@
 {
   "name": "plugin-pay",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "postinstall": "flex-plugin pre-script-check"
   },
   "dependencies": {
+    "@deshartman/payclient_functions": "^2.0.4",
     "axios": "^0.23.0",
     "dotenv-webpack": "^7.0.3",
     "flex-plugin-scripts": "4.2.0",
