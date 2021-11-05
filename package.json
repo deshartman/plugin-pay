@@ -6,7 +6,7 @@
     "postinstall": "flex-plugin pre-script-check"
   },
   "dependencies": {
-    "@deshartman/payclient_functions": "^2.0.4",
+    "@deshartman/payclient_functions": "^2.1.1",
     "axios": "^0.23.0",
     "dotenv-webpack": "^7.0.3",
     "flex-plugin-scripts": "4.2.0",

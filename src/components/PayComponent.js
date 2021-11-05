@@ -29,8 +29,10 @@ class PayComponent extends React.Component {
   }
 
   async componentDidMount() {
+    console.log("PayComponent Mounting");
+
     // Set the Internal Merchant Server URL for config and Access Tokens
-    let merchantServerUrl = "https://default-8440-dev.twil.io/getConfig";   // TODO: Change this URL after deploying Functions.
+    let merchantServerUrl = "https://default-2989-dev.twil.io/getConfig";   // TODO: Change this URL after deploying Functions.
     var callSid = this.props.task.attributes.call_sid
     try {
       this.payClient = new PayClient(merchantServerUrl, "Alice");
@@ -158,6 +160,32 @@ class PayComponent extends React.Component {
       });
     } catch (error) {
       console.error(`PayClient Mounted Error: ${error}`);
+    }
+  }
+
+  async componentWillUnmount() {
+    console.log("PayComponent Unmounting");
+    try {
+      await this.payClient.detachPay();
+
+      // Remove all the Component Event Listeners
+      this.payClient.removeAllListeners([
+        "callConnected",
+        "capturing",
+        "capturingCard",
+        "capturingSecurityCode",
+        "capturingDate",
+        "cardReset",
+        "securityCodeReset",
+        "dateReset",
+        "captureComplete",
+        "cancelledCapture",
+        "submitComplete",
+        "cardUpdate",
+      ]);
+      console.log("PayComponent Unmounted and detached Pay");
+    } catch (error) {
+      console.error(`PayClient Unmounted Error: ${error}`);
     }
   }
 
