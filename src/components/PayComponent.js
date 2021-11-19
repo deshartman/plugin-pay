@@ -1,8 +1,8 @@
 import React from 'react';
 import { withTaskContext, } from '@twilio/flex-ui';
 import CardView from './CardView';
-//import PayClient from "@deshartman/payclient_functions";
-import PayClient from '../AgentAssistPayClient';
+import PayClient from "@deshartman/payclient_functions";
+//import PayClient from '../AgentAssistPayClient';
 
 class PayComponent extends React.Component {
   constructor(props) {
