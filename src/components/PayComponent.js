@@ -1,7 +1,8 @@
 import React from 'react';
 import { withTaskContext, } from '@twilio/flex-ui';
 import CardView from './CardView';
-import PayClient from "@deshartman/payclient_functions";
+//import PayClient from "@deshartman/payclient_functions";
+import PayClient from '../AgentAssistPayClient';
 
 class PayComponent extends React.Component {
   constructor(props) {
@@ -31,11 +32,27 @@ class PayComponent extends React.Component {
   async componentDidMount() {
     console.log("PayComponent Mounting");
 
-    // Set the Internal Merchant Server URL for config and Access Tokens
-    let merchantServerUrl = "https://default-2989-dev.twil.io/getConfig";   // TODO: Change this URL after deploying Functions.
+    // Set the Agent variables. These are passed to the Agent screen, so this is a temp POC
+    let functionsURL = 'https://default-2989-dev.twil.io'; // TODO: Change this URL after deploying Functions for the first time.
+    let identity = "Alice";
+    let paymentConnector = 'Braintree_Connector';
+    let captureOrder = "payment-card-number,security-code,expiration-date";
+    let currency = "AUD";
+    let tokenType = "reusable";
+    let writeKey = "";
+
     var callSid = this.props.task.attributes.call_sid
+
     try {
-      this.payClient = new PayClient(merchantServerUrl, "Alice");
+      this.payClient = new PayClient(
+        functionsURL,
+        identity,
+        paymentConnector,
+        captureOrder,
+        currency,
+        tokenType,
+        writeKey
+      );
 
       await this.payClient.attachPay(callSid);
       await this.payClient.startCapture();
