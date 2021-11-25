@@ -33,25 +33,39 @@ export default class CardView extends React.Component {
     render() {
         return (
             <div style={overlayStyle.container}>
-                <Typography variant="h5" gutterBottom component="div" >
-                    Card Number:  {this.props.data.cardData.paymentCardNumber}
-                </Typography>
+                <TextField
+                    id="outlined-read-only-input"
+                    label="Card Number"
+                    value={this.props.data.cardData.paymentCardNumber}
+                    InputProps={{
+                        readOnly: true,
+                    }}
+                />
 
                 <br />
-                <Typography variant="h5" gutterBottom component="div" >
-                    Card CVC:  {this.props.data.cardData.securityCode}
-                </Typography>
-
-
+                <TextField
+                    id="outlined-read-only-input"
+                    label="Card CVC"
+                    value={this.props.data.cardData.securityCode}
+                    InputProps={{
+                        readOnly: true,
+                    }}
+                />
                 <br />
-                <Typography variant="h5" gutterBottom component="div" >
-                    Exp. Date:  {this.props.data.cardData.expirationDate}
-                </Typography>
-
+                <TextField
+                    id="outlined-read-only-input"
+                    label="Exp. Date:"
+                    value={this.props.data.cardData.expirationDate}
+                    InputProps={{
+                        readOnly: true,
+                    }}
+                />
                 <br />
                 <Typography variant="h5" gutterBottom component="div" >
                     Token:  {this.props.data.cardData.paymentToken}
                 </Typography>
+
+
 
             </div>
         )
