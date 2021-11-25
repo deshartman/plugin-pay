@@ -49,15 +49,12 @@ export default class AgentAssistPayClient extends EventEmitter {
         tokenType = "reusable",
         writeKey = null
     ) {
-
         super();
 
         this._version = "v3.0.1";
-
         this.functionsURL = functionsURL;
         this.identity = identity;
         this.paymentConnector = paymentConnector;
-        console.log(`SDK paymentConnector: ${this.paymentConnector}`);
         this.currency = currency;
         this.tokenType = tokenType;
 
@@ -77,9 +74,7 @@ export default class AgentAssistPayClient extends EventEmitter {
         // Call variables
         this.callSid = null;
 
-        /** 
-         * Internal Module variables, not exposed
-         */
+        //Internal Module variables, not exposed
         this._twilioAPI = null;
         this._statusCallback = '';
 
@@ -119,11 +114,11 @@ export default class AgentAssistPayClient extends EventEmitter {
         try {
             // Get Sync Token
             const syncToken = await axios.get(this.functionsURL + "/getSyncToken", { params: { identity: this.identity } });
-            console.log(`Sync Token: ${syncToken.data}`);
+            // console.log(`Sync Token: ${syncToken.data}`);
 
             this._syncClient = new SyncClient(syncToken.data, {});
             this._payMap = await this._syncClient.map('payMap');
-            console.log('Client payMap created');
+            //console.log('Client payMap created');
 
             // If a Call SID was passed in, CTI has the call already and now opening view
             if (this.callSid) {
@@ -144,30 +139,6 @@ export default class AgentAssistPayClient extends EventEmitter {
             } else {
                 // View opened with no call, so cannot determine the Call SID
                 console.log(`Cannot determine the Call SID.Please place a call or initiate the app with a call SID`);
-
-                ////////////////////////////////////////////// REMOVE WHEN USING CTI ///////////////////////////////////////////////////
-                //////// TODO: Temporary hack to automatically grab the Call SID. This would normally be done by CTI or Flex ///////////
-                const uuiMap = await this._syncClient.map('uuiMap');
-                uuiMap.on('itemAdded', (args) => {
-
-                    // Update View element events
-                    this.callSid = args.item.data.pstnSid;
-                    console.log(`SYNC uuiMap.on('itemAdded'): Call SID: ${this.callSid} `);
-                    this.emit('callConnected', this.callSid);
-
-                    /* Segment Action  */
-                    if (this.analytics) {
-                        //console.log(`Logging attachPay to Segment`);
-                        this.analytics.track('attachPay', {
-                            identity: this.identity,
-                            callSID: this.callSid,
-                            timeStamp: Date.now(),
-                        });
-                    }
-
-                    //console.log(`Initialised. TEMP HACK`);
-                });
-                /////////////////////////////////////////////////////////////////////////////////////////////////////////
             }
 
             // Add Event Listener for data changes. Update the card data
@@ -226,9 +197,6 @@ export default class AgentAssistPayClient extends EventEmitter {
         }
     };
 
-    /*
-    * 
-    */
     async _changeSession(changeType) {  // OK - test
         //console.log(`_changeSession ChangeType: ${changeType}`);
 
@@ -278,7 +246,7 @@ export default class AgentAssistPayClient extends EventEmitter {
         try {
             const response = await axios.post(this.functionsURL + '/startCapture', data);
             this._paySid = response.data;
-            console.log(`StartCapture: paySid: ${this._paySid} `);
+            // console.log(`StartCapture: paySid: ${this._paySid} `);
 
             // Update View element events
             this.emit('capturing');

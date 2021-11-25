@@ -1,8 +1,7 @@
 import React from 'react';
 import { withTaskContext, } from '@twilio/flex-ui';
 import CardView from './CardView';
-import PayClient from "@deshartman/payclient_functions";
-//import PayClient from '../AgentAssistPayClient';
+import PayClient from './AgentAssistPayClient';
 
 class PayComponent extends React.Component {
   constructor(props) {
@@ -154,7 +153,6 @@ class PayComponent extends React.Component {
       this.payClient.on("cardUpdate", (data) => {
         if (this.state.captureComplete) {
           console.log(`cardUpdate: this.state.captureComplete ${this.state.captureComplete}`);
-          console.log(data)
           this.setState({
             ...this.state,
             cardData: { ...this.state.cardData, paymentToken: data.paymentToken },
@@ -162,12 +160,9 @@ class PayComponent extends React.Component {
           });
         } else {
           console.log(data)
-          var search = 'x';
-          var replaceWith = '*';
-          var modifiedCardNumber = data.paymentCardNumber.split(search).join(replaceWith);
           this.setState({
             ...this.state, cardData: {
-              paymentCardNumber: modifiedCardNumber,
+              paymentCardNumber: data.paymentCardNumber,
               securityCode: data.securityCode,
               expirationDate: data.expirationDate,
               paymentCardType: data.paymentCardType
